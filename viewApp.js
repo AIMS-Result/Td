@@ -3,7 +3,7 @@ var app = angular.module('viewDiaryApp', []);
 app.controller('ViewController', function($scope, $http) {
     
     // !!! CRITICAL: REPLACE WITH YOUR GOOGLE SHEETS PUBLISHED CSV LINK !!!
-    var googleSheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVlG3VWvzvOzwo36khFV8DA-GoDYSidPBo2i8YWvraDM3eQSkegVaz39x-8Qa4W8Fzf5-raMnSUauM/pub?gid=588909063&single=true&output=csv';
+    var googleSheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVlG3VWvzvOzwo36khFV8DA-GoDYSidPBo2i8YWvraDM3eQSkegVaz39x-8Qa4W8Fzf5-raMnSUauM/export?format=csv&gid=0';
     
     // Core memory datasets
     var allEntries = [];
