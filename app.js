@@ -8,12 +8,7 @@ var app = angular.module('diaryApp', []);
 app.controller('DiaryController', function($scope, $http, $httpParamSerializerJQLike) {
     
         // MASTER STAFF PASSWORDS LIST
-            $scope.teacherRegistry = {
-                    "John Doe": "1234",
-                            "Jane Smith": "5678",
-                                    "Albert Einstein": "9999",
-                                            "Marie Curie": "1111"
-                                                };
+            $scope.teacherRegistry = {};
 
                                                     $scope.isLoggedIn = false;
                                                         $scope.loginData = { teacherName: '', pin: '' };
