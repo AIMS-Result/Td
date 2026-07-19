@@ -1,3 +1,8 @@
+// Paste your main Google Form response submission endpoint here:
+var googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSf7RKtiK4aD2NnEgocCJ4pngXV4KuxXWoRD_CwJ3JoyW8h_MA/formResponse';
+
+// Paste your BRAND NEW independent Staff Registry CSV link here:
+var registryCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTKsJnIL98uvAr-RpzFN8Ozx6H73IAqYqfLpSmI1hM5PzWCvpdMe9ZofWbmbmo8229Up044R3F6kcdm/pub?gid=0&single=true&output=csv';
 var app = angular.module('diaryApp', []);
 
 app.controller('DiaryController', function($scope, $http, $httpParamSerializerJQLike) {
