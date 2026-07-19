@@ -74,13 +74,13 @@ app.controller('ViewController', function($scope, $http) {
                 
                 // Normalizes spreadsheet data across keys
                 allEntries.forEach(function(row) {
-                    row['Teacher Name'] = row['Teacher Name'] || row['entry.111111111'];
-                    row['Subject'] = row['Subject'] || row['entry.222222222'];
-                    row['Date'] = row['Date'] || row['entry.333333333'];
-                    row['Status'] = row['Status'] || row['entry.444444444'];
-                    row['Classroom Records'] = row['Classroom Records'] || row['entry.555555555'];
-                    row['Topics Covered'] = row['Topics Covered'] || row['entry.666666666'];
-                    row['Remarks'] = row['Remarks'] || row['entry.777777777'];
+                    row['Teacher Name'] = row['Teacher Name'] || row['entry.1416561559'];
+                    row['Subject'] = row['Subject'] || row['entry.389868599'];
+                    row['Date'] = row['Date'] || row['entry.1404280910'];
+                    row['Status'] = row['Status'] || row['entry.1247247380'];
+                    row['Classroom Records'] = row['Classroom Records'] || row['entry.1058626871'];
+                    row['Topics Covered'] = row['Topics Covered'] || row['entry.1740253895'];
+                    row['Remarks'] = row['Remarks'] || row['entry.699280446'];
                 });
 
                 // Compile analytical values for cross-referencing tabs
