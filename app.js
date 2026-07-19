@@ -8,10 +8,42 @@ var app = angular.module('diaryApp', []);
 app.controller('DiaryController', function($scope, $http, $httpParamSerializerJQLike) {
     
         // MASTER STAFF PASSWORDS LIST
-            $scope.teacherRegistry = {};
+                $scope.teacherRegistry = {};
+                $scope.registeredTeacherNames = []; 
+                $scope.isLoggedIn = false;
+                $scope.isLoadingRegistry = true
+                // Paste this function to load the spreadsheet data dynamically
+$scope.initPortal = function() {
+    $http.get(registryCsvUrl)
+        .then(function(response) {
+            var parsed = Papa.parse(response.data, {
+                header: true,
+                skipEmptyLines: true
+            });
+            
+            // Loop through rows and save them into memory
+            parsed.data.forEach(function(row) {
+                if (row['Teacher Name'] && row['PIN']) {
+                    var nameKey = row['Teacher Name'].trim();
+                    $scope.teacherRegistry[nameKey] = String(row['PIN']).trim();
+                    $scope.registeredTeacherNames.push(nameKey);
+                }
+            });
+            $scope.isLoadingRegistry = false;
+        })
+        .catch(function(err) {
+            console.error("Registry Sync Failure:", err);
+            $scope.isLoadingRegistry = false;
+        });
+};
 
-                                                    $scope.isLoggedIn = false;
-                                                        $scope.loginData = { teacherName: '', pin: '' };
+// CRITICAL: Call the function immediately so it runs on page load
+$scope.initPortal();
+
+    //$scope.teacherRegistry = {};
+
+                                                  //  $scope.isLoggedIn = false;
+                                                     //   $scope.loginData = { teacherName: '', pin: '' };
 
                                                             function getDefaultLectures() {
                                                                     return [
