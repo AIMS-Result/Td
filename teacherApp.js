@@ -4,6 +4,9 @@ app.controller('TeacherViewController', function($scope, $http) {
     
     // !!! REPLACE WITH YOUR GOOGLE SHEETS PUBLISHED CSV URL !!!
     var googleSheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVlG3VWvzvOzwo36khFV8DA-GoDYSidPBo2i8YWvraDM3eQSkegVaz39x-8Qa4W8Fzf5-raMnSUauM/pub?gid=588909063&single=true&output=csv';
+   
+// Paste your BRAND NEW independent Staff Registry CSV link here:
+    var registryCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTKsJnIL98uvAr-RpzFN8Ozx6H73IAqYqfLpSmI1hM5PzWCvpdMe9ZofWbmbmo8229Up044R3F6kcdm/pub?gid=0&single=true&output=csv';
 
     $scope.teacherRegistry = {
         "John Doe": "1234",
