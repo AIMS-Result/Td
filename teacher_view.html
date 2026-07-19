@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="teacherDiaryApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Portal - Personal Records</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body class="bg-light" ng-controller="TeacherViewController">
+
+    <nav class="navbar navbar-dark bg-primary shadow-sm mb-4" ng-if="isLoggedIn">
+        <div class="container-fluid px-4">
+            <span class="navbar-brand mb-0 h1">📝 Teacher Workspace Portal</span>
+            <button class="btn btn-light btn-sm fw-bold text-primary" ng-click="logout()">🔒 Lock & Logout</button>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="row justify-content-center" ng-if="!isLoggedIn">
+            <div class="col-md-5">
+                <div class="card shadow border-0 mt-5">
+                    <div class="card-header bg-primary text-white text-center py-4">
+                        <h4 class="mb-0">👨‍🏫 Personal Diary Access</h4>
+                        <small class="text-white-50">Log in to view your past records</small>
+                    </div>
+                    <div class="card-body p-4">
+                        <form ng-submit="login()">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Select Your Name</label>
+                                <input class="form-control" list="teachersList" ng-model="loginData.teacherName" placeholder="Search your name..." required>
+                                <datalist id="teachersList">
+                                    <option ng-repeat="(name, pin) in teacherRegistry" value="{{name}}"></option>
+                                </datalist>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Enter Security PIN</label>
+                                <input type="password" class="form-control text-center fs-4" ng-model="loginData.pin" placeholder="••••" required>
+                            </div>
+                            <div class="d-grid"><button type="submit" class="btn btn-primary btn-lg">View My Records</button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-if="isLoggedIn">
+            <div class="text-center my-5" ng-if="isLoading">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2 text-muted">Loading your cloud logs database safely...</p>
+            </div>
+
+            <div ng-if="!isLoading">
+                <div class="alert alert-white border shadow-sm p-4 mb-4 d-flex justify-content-between align-items-center bg-white rounded">
+                    <div>
+                        <h3 class="fw-bold mb-1 text-dark">Welcome, {{ currentTeacher }}</h3>
+                        <p class="text-muted mb-0 small">Reviewing all captured submission timelines sorted chronologically.</p>
+                    </div>
+                    <div><span class="badge bg-secondary p-2 fs-6">Logged Days: {{ personalEntries.length }}</span></div>
+                </div>
+
+                <div class="card border-0 shadow-sm" ng-if="personalEntries.length > 0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 15%;">Date</th>
+                                    <th style="width: 15%;">Subject</th>
+                                    <th style="width: 15%;">Attendance</th>
+                                    <th>Lecture Breakdown Matrix (Read-Only)</th>
+                                    <th style="width: 20%;">General Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="entry in personalEntries">
+                                    <td class="fw-bold small text-primary">{{ entry['Date'] }}</td>
+                                    <td><span class="badge bg-secondary">{{ entry['Subject'] }}</span></td>
+                                    <td><span class="badge" ng-class="{'bg-success': entry['Status'] === 'Present', 'bg-danger': entry['Status'] === 'Absent', 'bg-warning text-dark': entry['Status'] === 'Half Day', 'bg-info text-dark': entry['Status'] === 'Sick Leave'}">{{ entry['Status'] }}</span></td>
+                                    <td>
+                                        <div ng-if="entry['Status'] === 'Absent' || entry['Status'] === 'Sick Leave'" class="text-muted small italic">No classes conducted (Off Duty)</div>
+                                        <div ng-if="entry['Status'] !== 'Absent' && entry['Status'] !== 'Sick Leave'" class="row g-2 py-1">
+                                            <div class="col-md-5 border-end">
+                                                <strong class="text-muted small d-block mb-1">🏫 Class Layout</strong>
+                                                <pre class="bg-light p-2 rounded text-dark mb-0 small text-start" style="font-family: inherit; white-space: pre-wrap;">{{ entry['Classroom Records'] }}</pre>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <strong class="text-muted small d-block mb-1">📝 Curriculum Topics Covered</strong>
+                                                <pre class="bg-light p-2 rounded text-dark mb-0 small text-start" style="font-family: inherit; white-space: pre-wrap;">{{ entry['Topics Covered'] }}</pre>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted small text-wrap">{{ entry['Remarks'] || '-' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="teacherApp.js"></script>
+</body>
+</html>
