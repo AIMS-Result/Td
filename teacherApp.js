@@ -8,12 +8,7 @@ app.controller('TeacherViewController', function($scope, $http) {
 // Paste your BRAND NEW independent Staff Registry CSV link here:
     var registryCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTKsJnIL98uvAr-RpzFN8Ozx6H73IAqYqfLpSmI1hM5PzWCvpdMe9ZofWbmbmo8229Up044R3F6kcdm/pub?gid=0&single=true&output=csv';
 
-    $scope.teacherRegistry = {
-        "John Doe": "1234",
-        "Jane Smith": "5678",
-        "Albert Einstein": "9999",
-        "Marie Curie": "1111"
-    };
+    $scope.teacherRegistry = {};
 
     $scope.isLoggedIn = false;
     $scope.currentTeacher = '';
