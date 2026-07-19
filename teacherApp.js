@@ -10,11 +10,33 @@ app.controller('TeacherViewController', function($scope, $http) {
 
     $scope.teacherRegistry = {};
 
-    $scope.isLoggedIn = false;
+   /* $scope.isLoggedIn = false;
     $scope.currentTeacher = '';
     $scope.loginData = { teacherName: '', pin: '' };
     $scope.personalEntries = [];
-    $scope.isLoading = false;
+    $scope.isLoading = false;*/
+    $scope.initTeacherPortal = function() {
+    $http.get(registryCsvUrl).then(function(res) {
+        var parsed = Papa.parse(res.data, { header: true, skipEmptyLines: true });
+        parsed.data.forEach(function(row) {
+            if(row['Teacher Name'] && row['PIN']) {
+                $scope.teacherRegistry[row['Teacher Name'].trim()] = String(row['PIN']).trim();
+            }
+        });
+        // Check for old login sessions
+        var activeUser = sessionStorage.getItem('activeTeacherUser');
+        var secureKey = sessionStorage.getItem('teacherAuthToken');
+        if (activeUser && secureKey === 'authenticated_teacher_secure_' + activeUser) {
+            $scope.isLoggedIn = true;
+            $scope.currentTeacher = activeUser;
+            $scope.loadIsolatedTeacherData();
+        }
+    });
+};
+
+// CRITICAL: Call it immediately
+$scope.initTeacherPortal();
+
 
     function verifySavedSession() {
         var activeUser = sessionStorage.getItem('activeTeacherUser');
