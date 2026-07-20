@@ -130,7 +130,7 @@ app.controller('ViewController', function($scope, $http) {
             $scope.selectDate($scope.uniqueDates[0]);
         }
 
-
+    };
         
 
     // 3. PERSPECTIVE VIEW TRANSITIONS
