@@ -9,7 +9,7 @@ app.controller('DiaryController', function($scope, $http, $httpParamSerializerJQ
     var googleFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSf7RKtiK4aD2NnEgocCJ4pngXV4KuxXWoRD_CwJ3JoyW8h_MA/formResponse';
     
     // Paste your BRAND NEW standalone Registry Sheet CSV URL here
-    var registryCsvUrl = 'https://docs.google.com/spreadsheets/d/1ZtlIUIfhnyV_6FrA6KPqoZxckc2_aOInm9LsR5tS9kM/export?format=csv&gid=0';
+    var registryCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTKsJnIL98uvAr-RpzFN8Ozx6H73IAqYqfLpSmI1hM5PzWCvpdMe9ZofWbmbmo8229Up044R3F6kcdm/pub?gid=0&single=true&output=csv';
     // ==========================================
 
     // Dynamic app state storage
