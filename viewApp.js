@@ -60,7 +60,7 @@ app.controller('ViewController', function($scope, $http) {
         allEntries = [];
     };
 
-    $scope.onCalendarChange = function() {
+
 
     // Automatically set the calendar to the latest available date in your sheet
 if ($scope.uniqueDates.length > 0) {
@@ -76,7 +76,10 @@ if ($scope.uniqueDates.length > 0) {
     $scope.filterEntriesByDate(latestDateStr);
 }
 
-        
+
+
+    
+    $scope.onCalendarChange = function() {     
     if ($scope.pickerDate) {
         // Convert JS Date object to DD/MM/YYYY to match Google Sheet format
         var d = new Date($scope.pickerDate);
