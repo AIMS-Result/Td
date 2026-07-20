@@ -61,12 +61,42 @@ app.controller('ViewController', function($scope, $http) {
     };
 
     $scope.onCalendarChange = function() {
+
+    // Automatically set the calendar to the latest available date in your sheet
+if ($scope.uniqueDates.length > 0) {
+    var latestDateStr = $scope.uniqueDates[0]; // e.g. "20/07/2026"
+    $scope.selectedDate = latestDateStr;
+    
+    // Convert "DD/MM/YYYY" back to Date object for input[type=date]
+    var parts = latestDateStr.split('/');
+    if (parts.length === 3) {
+        $scope.pickerDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    }
+    
+    $scope.filterEntriesByDate(latestDateStr);
+}
+
+        
     if ($scope.pickerDate) {
-        // Formats the selected date to match your Google Sheet date format (YYYY-MM-DD or DD/MM/YYYY)
-        var formattedDate = $scope.pickerDate.toISOString().split('T')[0];
+        // Convert JS Date object to DD/MM/YYYY to match Google Sheet format
+        var d = new Date($scope.pickerDate);
+        var day = String(d.getDate()).padStart(2, '0');
+        var month = String(d.getMonth() + 1).padStart(2, '0');
+        var year = d.getFullYear();
+        
+        var formattedDate = day + '/' + month + '/' + year;
+
+        // Update active selection and trigger filter
         $scope.selectedDate = formattedDate;
         $scope.filterEntriesByDate(formattedDate);
     }
+};
+
+// Helper function to filter sheet rows by date
+$scope.filterEntriesByDate = function(targetDate) {
+    $scope.filteredDateEntries = $scope.allEntries.filter(function(entry) {
+        return entry['Date'] && entry['Date'].trim() === targetDate.trim();
+    });
 };
 
 
