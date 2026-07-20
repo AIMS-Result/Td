@@ -60,35 +60,6 @@ app.controller('ViewController', function($scope, $http) {
         allEntries = [];
     };
 
-
-
-    
-    $scope.onCalendarChange = function() {     
-    if ($scope.pickerDate) {
-        // Convert JS Date object to DD/MM/YYYY to match Google Sheet format
-        var d = new Date($scope.pickerDate);
-        var day = String(d.getDate()).padStart(2, '0');
-        var month = String(d.getMonth() + 1).padStart(2, '0');
-        var year = d.getFullYear();
-        
-        var formattedDate = day + '/' + month + '/' + year;
-
-        // Update active selection and trigger filter
-        $scope.selectedDate = formattedDate;
-        $scope.filterEntriesByDate(formattedDate);
-    }
-};
-
-  
-    
-// Helper function to filter sheet rows by date
-$scope.filterEntriesByDate = function(targetDate) {
-    $scope.filteredDateEntries = $scope.allEntries.filter(function(entry) {
-        return entry['Date'] && entry['Date'].trim() === targetDate.trim();
-    });
-};
-
-
     // 2. LIVE CLOUD DATA AGGREGATION & INGESTION
     $scope.fetchCloudDatabase = function() {
         $scope.isLoading = true;
@@ -155,33 +126,12 @@ $scope.filterEntriesByDate = function(targetDate) {
         $scope.uniqueClasses = Array.from(rawClassesSet).sort();
 
         // Default initial date selection configuration
-        //if($scope.uniqueDates.length > 0) {
-          //  $scope.selectDate($scope.uniqueDates[0]);
-        //}
-
-
-        // Automatically set the calendar to the latest available date in your sheet
-if ($scope.uniqueDates.length > 0) {
-    var latestDateStr = $scope.uniqueDates[0]; // e.g. "20/07/2026"
-    $scope.selectedDate = latestDateStr;
-    
-    // Convert "DD/MM/YYYY" back to Date object for input[type=date]
-    var parts = latestDateStr.split('/');
-    if (parts.length === 3) {
-        $scope.pickerDate = new Date(parts[2], parts[1] - 1, parts[0]);
-    }
-    
-    $scope.filterEntriesByDate(latestDateStr);
-}
-
-    
-
-
-
+        if($scope.uniqueDates.length > 0) {
+            $scope.selectDate($scope.uniqueDates[0]);
+        }
 
 
         
-    }
 
     // 3. PERSPECTIVE VIEW TRANSITIONS
     $scope.changeView = function(viewName) {
