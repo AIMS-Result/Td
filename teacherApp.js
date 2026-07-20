@@ -2,41 +2,37 @@ var app = angular.module('teacherDiaryApp', []);
 
 app.controller('TeacherViewController', function($scope, $http) {
     
-    // !!! REPLACE WITH YOUR GOOGLE SHEETS PUBLISHED CSV URL !!!
+    // ==========================================
+    // CONFIGURATION CONFIG: ENTER YOUR LINKS HERE
+    // ==========================================
+    // This remains your original diary entries response sheet CSV link
     var googleSheetCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTVlG3VWvzvOzwo36khFV8DA-GoDYSidPBo2i8YWvraDM3eQSkegVaz39x-8Qa4W8Fzf5-raMnSUauM/pub?gid=588909063&single=true&output=csv';
-   
-// Paste your BRAND NEW independent Staff Registry CSV link here:
+
+    // Paste your BRAND NEW standalone Registry Sheet CSV URL here
     var registryCsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTKsJnIL98uvAr-RpzFN8Ozx6H73IAqYqfLpSmI1hM5PzWCvpdMe9ZofWbmbmo8229Up044R3F6kcdm/pub?gid=0&single=true&output=csv';
+    // ==========================================
 
     $scope.teacherRegistry = {};
-
-   /* $scope.isLoggedIn = false;
+    $scope.isLoggedIn = false;
     $scope.currentTeacher = '';
     $scope.loginData = { teacherName: '', pin: '' };
     $scope.personalEntries = [];
-    $scope.isLoading = false;*/
+    $scope.isLoading = false;
+
+    // Load credential database live from Cloud Registry
     $scope.initTeacherPortal = function() {
-    $http.get(registryCsvUrl).then(function(res) {
-        var parsed = Papa.parse(res.data, { header: true, skipEmptyLines: true });
-        parsed.data.forEach(function(row) {
-            if(row['Teacher Name'] && row['PIN']) {
-                $scope.teacherRegistry[row['Teacher Name'].trim()] = String(row['PIN']).trim();
-            }
+        $http.get(registryCsvUrl).then(function(res) {
+            var parsed = Papa.parse(res.data, { header: true, skipEmptyLines: true });
+            parsed.data.forEach(function(row) {
+                if(row['Teacher Name'] && row['PIN']) {
+                    $scope.teacherRegistry[row['Teacher Name'].trim()] = String(row['PIN']).trim();
+                }
+            });
+            verifySavedSession();
+        }).catch(function(err) {
+            console.error("Registry load error: ", err);
         });
-        // Check for old login sessions
-        var activeUser = sessionStorage.getItem('activeTeacherUser');
-        var secureKey = sessionStorage.getItem('teacherAuthToken');
-        if (activeUser && secureKey === 'authenticated_teacher_secure_' + activeUser) {
-            $scope.isLoggedIn = true;
-            $scope.currentTeacher = activeUser;
-            $scope.loadIsolatedTeacherData();
-        }
-    });
-};
-
-// CRITICAL: Call it immediately
-$scope.initTeacherPortal();
-
+    };
 
     function verifySavedSession() {
         var activeUser = sessionStorage.getItem('activeTeacherUser');
@@ -51,10 +47,10 @@ $scope.initTeacherPortal();
 
     $scope.login = function() {
         var targetUser = $scope.loginData.teacherName.trim();
-        var suppliedPin = $scope.loginData.pin;
+        var suppliedPin = String($scope.loginData.pin).trim();
 
         if (!$scope.teacherRegistry.hasOwnProperty(targetUser)) {
-            alert("Error: Your name is not registered.");
+            alert("This teacher name is not registered.");
             return;
         }
 
@@ -67,7 +63,7 @@ $scope.initTeacherPortal();
             
             $scope.loadIsolatedTeacherData();
         } else {
-            alert("Security Error: Incorrect PIN.");
+            alert("Security Error: Incorrect authentication PIN.");
         }
     };
 
@@ -84,21 +80,16 @@ $scope.initTeacherPortal();
         $scope.isLoading = true;
         $http.get(googleSheetCsvUrl)
             .then(function(response) {
-                var parsedResult = Papa.parse(response.data, {
-                    header: true,
-                    skipEmptyLines: true
-                });
-                
+                var parsedResult = Papa.parse(response.data, { header: true, skipEmptyLines: true });
                 var rawEntries = parsedResult.data;
                 
                 rawEntries.forEach(function(row) {
-                    row['Teacher Name'] = row['Teacher Name'] || row['entry.111111111'];
-                    row['Subject'] = row['Subject'] || row['entry.222222222'];
-                    row['Date'] = row['Date'] || row['entry.333333333'];
-                    row['Status'] = row['Status'] || row['entry.444444444'];
-                    row['Classroom Records'] = row['Classroom Records'] || row['entry.555555555'];
-                    row['Topics Covered'] = row['Topics Covered'] || row['entry.666666666'];
-                    row['Remarks'] = row['Remarks'] || row['entry.777777777'];
+                    row['Teacher Name'] = row['Teacher Name'] || row['entry.1416561559'];
+                    row['Subject'] = row['Subject'] || row['entry.389868599'];
+                    row['Date'] = row['Date'] || row['entry.1404280910'];
+                    row['Status'] = row['Status'] || row['entry.1247247380'];
+                    row['Classroom Records'] = row['Classroom Records'] || row['entry.1058626871'];
+                    row['Topics Covered'] = row['Topics Covered'] || row['entry.1740253895'];
                 });
 
                 $scope.personalEntries = rawEntries.filter(function(row) {
@@ -115,6 +106,5 @@ $scope.initTeacherPortal();
             });
     };
 
-    verifySavedSession();
+    $scope.initTeacherPortal();
 });
-
