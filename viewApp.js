@@ -60,6 +60,16 @@ app.controller('ViewController', function($scope, $http) {
         allEntries = [];
     };
 
+    $scope.onCalendarChange = function() {
+    if ($scope.pickerDate) {
+        // Formats the selected date to match your Google Sheet date format (YYYY-MM-DD or DD/MM/YYYY)
+        var formattedDate = $scope.pickerDate.toISOString().split('T')[0];
+        $scope.selectedDate = formattedDate;
+        $scope.filterEntriesByDate(formattedDate);
+    }
+};
+
+
     // 2. LIVE CLOUD DATA AGGREGATION & INGESTION
     $scope.fetchCloudDatabase = function() {
         $scope.isLoading = true;
