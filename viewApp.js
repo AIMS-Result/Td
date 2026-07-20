@@ -79,23 +79,7 @@ app.controller('ViewController', function($scope, $http) {
     }
 };
 
-  // Automatically set the calendar to the latest available date in your sheet
-if ($scope.uniqueDates.length > 0) {
-    var latestDateStr = $scope.uniqueDates[0]; // e.g. "20/07/2026"
-    $scope.selectedDate = latestDateStr;
-    
-    // Convert "DD/MM/YYYY" back to Date object for input[type=date]
-    var parts = latestDateStr.split('/');
-    if (parts.length === 3) {
-        $scope.pickerDate = new Date(parts[2], parts[1] - 1, parts[0]);
-    }
-    
-    $scope.filterEntriesByDate(latestDateStr);
-}
-
-    
-
-
+  
     
 // Helper function to filter sheet rows by date
 $scope.filterEntriesByDate = function(targetDate) {
@@ -171,9 +155,32 @@ $scope.filterEntriesByDate = function(targetDate) {
         $scope.uniqueClasses = Array.from(rawClassesSet).sort();
 
         // Default initial date selection configuration
-        if($scope.uniqueDates.length > 0) {
-            $scope.selectDate($scope.uniqueDates[0]);
-        }
+        //if($scope.uniqueDates.length > 0) {
+          //  $scope.selectDate($scope.uniqueDates[0]);
+        //}
+
+
+        // Automatically set the calendar to the latest available date in your sheet
+if ($scope.uniqueDates.length > 0) {
+    var latestDateStr = $scope.uniqueDates[0]; // e.g. "20/07/2026"
+    $scope.selectedDate = latestDateStr;
+    
+    // Convert "DD/MM/YYYY" back to Date object for input[type=date]
+    var parts = latestDateStr.split('/');
+    if (parts.length === 3) {
+        $scope.pickerDate = new Date(parts[2], parts[1] - 1, parts[0]);
+    }
+    
+    $scope.filterEntriesByDate(latestDateStr);
+}
+
+    
+
+
+
+
+
+        
     }
 
     // 3. PERSPECTIVE VIEW TRANSITIONS
