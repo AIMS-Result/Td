@@ -109,13 +109,13 @@
                                 <p class="text-muted small">Select a specific teacher to isolate and view their historical performance logs.</p>
                             </div>
                         </div>
-                        <div class="col-md-4" ng-click="changeView('class')">
+                        <!--<div class="col-md-4" ng-click="changeView('class')">
                             <div class="card h-100 border-0 shadow-sm text-center p-4 dashboard-card border-top border-warning border-4">
                                 <div class="fs-1 mb-3">🏫</div>
                                 <h4 class="fw-bold text-warning">Track By Class</h4>
                                 <p class="text-muted small">Select a classroom to analyze precisely what topics were covered by different teachers.</p>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
 
@@ -204,6 +204,7 @@
                                             <th>Subject</th>
                                             <th>Status</th>
                                             <th>Action</th>
+                                            <th>Remark</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -220,6 +221,7 @@
                                                     🔍 View Lectures
                                                 </button>
                                             </td>
+                                            <td class="fw-bold text-dark">{{ entry['Remarks'] }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
