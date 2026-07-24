@@ -189,7 +189,11 @@
                class="form-control form-control-lg text-center fw-bold" 
                ng-model="pickerDate" 
                ng-change="onCalendarChange()">
-                </div>
+                </div><a class="nav-link p-2 btn text-wrap fw-bold" 
+                                           ng-class="{'btn-primary active': selectedDate === date, 'btn-outline-secondary text-light': selectedDate !== date}" 
+                                           ng-click="selectDate(date)">
+                                            ok
+                </a>
                   </div>
 
                     
