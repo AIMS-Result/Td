@@ -88,7 +88,7 @@ app.controller('DiaryController', function($scope, $http, $httpParamSerializerJQ
         $scope.resetForm();
     };
 
-    $scope.submitDiary = function() {
+    /* $scope.submitDiary = function() {
         // Map data directly to your form layout fields
         var postData = {
             'entry.1416561559': $scope.diaryEntry.teacherName, 
@@ -112,8 +112,60 @@ app.controller('DiaryController', function($scope, $http, $httpParamSerializerJQ
             alert("Diary Entry Submitted successfully!");
             $scope.logout();
         });
+    }; */
+
+    // NEW UPDATED CODE:
+$scope.submitDiary = function() {
+    // 1. Get today's actual date
+    var today = new Date();
+    var todayStr = today.toISOString().split('T')[0];
+    
+    // 2. Get the date selected by the teacher
+    var entryDateObj = new Date($scope.diaryEntry.date);
+    var entryDateStr = entryDateObj.toISOString().split('T')[0];
+
+    // 3. Prepare remarks & check for late submission
+    var finalRemarks = $scope.diaryEntry.remarks || '';
+
+    if (entryDateStr < todayStr) {
+        var formattedToday = String(today.getDate()).padStart(2, '0') + '/' + 
+                             String(today.getMonth() + 1).padStart(2, '0') + '/' + 
+                             today.getFullYear();
+                             
+        var lateTag = "[Late Entry - Submitted on: " + formattedToday + "]";
+        finalRemarks = finalRemarks ? lateTag + " " + finalRemarks : lateTag;
+    }
+
+    // 4. Map form fields (Using updated finalRemarks)
+    var postData = {
+        'entry.1416561559': $scope.diaryEntry.teacherName, 
+        'entry.389868599': $scope.diaryEntry.subject,      
+        'entry.1404280910': entryDateStr,
+        'entry.1247247380': $scope.diaryEntry.status,
+        'entry.1058626871': ($scope.diaryEntry.status === 'Present' || $scope.diaryEntry.status === 'Half Day') ? $scope.diaryEntry.lectures.map((l,i)=>"L"+(i+1)+": "+(l.classSection||'Free/Blank')).join('\n') : 'N/A',
+        'entry.1740253895': ($scope.diaryEntry.status === 'Present' || $scope.diaryEntry.status === 'Half Day') ? $scope.diaryEntry.lectures.map((l,i)=>"L"+(i+1)+": "+(l.topics||'Free/Blank')).join('\n') : 'N/A',
+        'entry.699280446': finalRemarks
     };
 
+    // 5. Submit to Google Forms
+    $http({
+        method: 'POST',
+        url: googleFormUrl,
+        data: $httpParamSerializerJQLike(postData),
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    }).then(function() {
+        alert("Success! Your daily diary has been safely logged.");
+        $scope.logout();
+    }).catch(function() {
+        alert("Diary Entry Submitted successfully!");
+        $scope.logout();
+    });
+};
+
+
+
+
+    
     $scope.resetForm = function() {
         $scope.diaryEntry.subject = '';
         $scope.diaryEntry.lectures = getDefaultLectures();
