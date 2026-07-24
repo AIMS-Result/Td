@@ -163,7 +163,7 @@
                         </div>
                     </div>
                 </div>-->
-                <div class="row text-dark text-start" ng-if="currentView === 'date'">
+                <!--<div class="row text-dark text-start" ng-if="currentView === 'date'">
                     <div class="col-lg-3 col-md-4 mb-4">
                         <div class="sidebar p-3 shadow-sm bg-dark text-white rounded" style="min-height: auto; max-height: 75vh;">
                             <h5 class="fw-bold mb-3 border-bottom border-secondary pb-2 text-center text-md-start">📅 Select Date</h5>
@@ -179,7 +179,9 @@
                                 </ul>
                             </div>
                         </div>
-                </div>
+                </div>-->
+
+                    <div class="row text-dark text-start" ng-if="currentView === 'date'">
 
                   <div class="col-lg-4 col-md-5 mb-3">
     <div class="card shadow-sm border-0 p-3 bg-dark text-white rounded">
@@ -191,10 +193,11 @@
                ng-change="onCalendarChange()">
                 <a clas="nav-link p-2 btn text-wrap fw-bold" 
                                            ng-class="{'btn-primary active': selectedDate === date, 'btn-outline-secondary text-light': selectedDate !== date}" 
-                                           ng-click="selectDate(date)">
+                                           ng-click="selectDate(calendarSelect)">
                                             ok
                 </a></div>
                   </div>
+                    
 
                     
                     <div class="col-lg-9 col-md-15">
