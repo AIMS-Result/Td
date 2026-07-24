@@ -80,11 +80,11 @@
                                     <td>
                                         <div ng-if="entry['Status'] === 'Absent' || entry['Status'] === 'Sick Leave'" class="text-muted small italic">No classes conducted (Off Duty)</div>
                                         <div ng-if="entry['Status'] !== 'Absent' && entry['Status'] !== 'Sick Leave'" class="row g-2 py-1">
-                                            <div class="col-md-5 border-end">
+                                            <div class="col-md-8 border-end">
                                                 <strong class="text-muted small d-block mb-1">🏫 Class Layout</strong>
                                                 <pre class="bg-light p-2 rounded text-dark mb-0 small text-start" style="font-family: inherit; white-space: pre-wrap;">{{ entry['Classroom Records'] }}</pre>
                                             </div>
-                                            <div class="col-md-7">
+                                            <div class="col-md-15">
                                                 <strong class="text-muted small d-block mb-1">📝 Curriculum Topics Covered</strong>
                                                 <pre class="bg-light p-2 rounded text-dark mb-0 small text-start" style="font-family: inherit; white-space: pre-wrap;">{{ entry['Topics Covered'] }}</pre>
                                             </div>
