@@ -76,7 +76,7 @@ app.controller('TeacherViewController', function($scope, $http) {
         $scope.personalEntries = [];
     };
 
-    $scope.loadIsolatedTeacherData = function() {
+    /*$scope.loadIsolatedTeacherData = function() {
         $scope.isLoading = true;
         $http.get(googleSheetCsvUrl)
             .then(function(response) {
@@ -104,7 +104,59 @@ app.controller('TeacherViewController', function($scope, $http) {
                 alert("Failed to sync database entries securely.");
                 $scope.isLoading = false;
             });
-    };
+    }; */
+
+    $scope.loadIsolatedTeacherData = function() {
+    $scope.isLoading = true;
+    $http.get(googleSheetCsvUrl)
+        .then(function(response) {
+            var parsedResult = Papa.parse(response.data, { header: true, skipEmptyLines: true });
+            var rawEntries = parsedResult.data;
+            
+            // 1. Normalize field names
+            rawEntries.forEach(function(row) {
+                    row['Teacher Name'] = row['Teacher Name'] || row['entry.1416561559'];
+                    row['Subject'] = row['Subject'] || row['entry.389868599'];
+                    row['Date'] = row['Date'] || row['entry.1404280910'];
+                    row['Status'] = row['Status'] || row['entry.1247247380'];
+                    row['Classroom Records'] = row['Classroom Records'] || row['entry.1058626871'];
+                    row['Topics Covered'] = row['Topics Covered'] || row['entry.1740253895'];
+                });
+
+            // 2. Filter entries for the logged-in teacher
+            var teacherRows = rawEntries.filter(function(row) {
+                return row['Teacher Name'] && row['Teacher Name'].trim() === $scope.currentTeacher;
+            });
+
+            // 3. Deduplicate: Map by Date keeping ONLY the latest entry submitted
+            var latestEntriesByDate = {};
+            
+            // Loop through entries sequentially (Google Sheets appends new rows at the bottom)
+            teacherRows.forEach(function(row) {
+                if (row['Date']) {
+                    var dateKey = row['Date'].trim();
+                    // Overwriting the key ensures the LAST (latest) row for that date wins!
+                    latestEntriesByDate[dateKey] = row; 
+                }
+            });
+
+            // 4. Convert back to array and sort descending by Date
+            $scope.personalEntries = Object.values(latestEntriesByDate).sort(function(a, b) {
+                return new Date(b['Date']) - new Date(a['Date']);
+            });
+
+            $scope.isLoading = false;
+        })
+        .catch(function(err) {
+            alert("Failed to sync database entries securely.");
+            $scope.isLoading = false;
+        });
+};
+
+
+
+
+    
 
     $scope.initTeacherPortal();
 });
