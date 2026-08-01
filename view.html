@@ -206,16 +206,26 @@
         <label for="adminDatePicker" class="form-label fw-bold text-warning mb-2">
             📅 Select Date from Calendar
         </label>
-        <input type="date" 
-               id="adminDatePicker" 
-               class="form-control form-control-lg text-center fw-bold bg-white text-dark shadow-sm" 
-               ng-model="pickerDate" 
-               ng-change="onCalendarChange()">
+        
+        <div class="d-flex gap-2">
+            <input type="date" 
+                   id="adminDatePicker" 
+                   class="form-control form-control-lg text-center fw-bold bg-white text-dark shadow-sm" 
+                   ng-model="pickerDate">
+            
+            <button type="button" 
+                    class="btn btn-primary fw-bold px-3" 
+                    ng-click="applyCalendarDate()">
+                OK
+            </button>
+        </div>
+        
         <small class="text-muted mt-2 d-block text-center">
-            Pick any date to view daily logs
+            Pick a date and tap OK to update records
         </small>
     </div>
 </div>
+
 
 
             
