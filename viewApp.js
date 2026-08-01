@@ -173,7 +173,7 @@ app.controller('ViewController', function($scope, $http) {
 };*/
 
     // 1. Fixed Calendar Change Handler (Uses exact YYYY-MM-DD split to avoid timezone offsets)
-$scope.onCalendarChange = function() {
+/*$scope.onCalendarChange = function() {
     if ($scope.pickerDate) {
         // If pickerDate is a Date object, convert to YYYY-MM-DD string safely
         var dateStr = "";
@@ -211,7 +211,63 @@ $scope.selectDate = function(targetDate) {
     $scope.filteredDateEntries = $scope.allEntries.filter(function(entry) {
         return entry['Date'] && entry['Date'].trim() === targetDate.trim();
     });
+};*/
+
+
+    // 1. Calendar Change Event Listener
+$scope.onCalendarChange = function() {
+    if (!$scope.pickerDate) return;
+
+    var year, month, day;
+
+    if ($scope.pickerDate instanceof Date) {
+        year = $scope.pickerDate.getFullYear();
+        month = String($scope.pickerDate.getMonth() + 1).padStart(2, '0');
+        day = String($scope.pickerDate.getDate()).padStart(2, '0');
+    } else {
+        // If passed as string "YYYY-MM-DD"
+        var strParts = String($scope.pickerDate).split('-');
+        if (strParts.length === 3) {
+            year = strParts[0];
+            month = strParts[1];
+            day = strParts[2];
+        }
+    }
+
+    if (year && month && day) {
+        var formattedDate = day + '/' + month + '/' + year; // Convert to "DD/MM/YYYY"
+        
+        // Directly update selectedDate and run filter
+        $scope.selectedDate = formattedDate;
+        $scope.filterEntriesByDate(formattedDate);
+    }
 };
+
+// 2. Main Filter Function
+$scope.filterEntriesByDate = function(targetDate) {
+    $scope.selectedDate = targetDate;
+    
+    // Filter deduplicated records
+    $scope.filteredDateEntries = $scope.allEntries.filter(function(entry) {
+        return entry['Date'] && entry['Date'].trim() === targetDate.trim();
+    });
+};
+
+// 3. Helper to Sync Default Date on Initial Load
+$scope.selectDate = function(targetDate) {
+    $scope.selectedDate = targetDate;
+    
+    // Convert "DD/MM/YYYY" to Date object for HTML5 input
+    if (targetDate && targetDate.includes('/')) {
+        var parts = targetDate.split('/');
+        if (parts.length === 3) {
+            $scope.pickerDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+        }
+    }
+    
+    $scope.filterEntriesByDate(targetDate);
+};
+
 
 
 
