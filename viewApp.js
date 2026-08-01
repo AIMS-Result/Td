@@ -126,7 +126,7 @@ app.controller('ViewController', function($scope, $http) {
             return entry['Date'] && entry['Date'].trim() === targetDate.trim();
         });
     };*/
-$scope.selectDate = function(targetDate) {
+/*$scope.selectDate = function(targetDate) {
     $scope.selectedDate = targetDate;
     
     // Parse DD/MM/YYYY back into Date object for input[type="date"]
@@ -158,7 +158,7 @@ $scope.selectDate = function(targetDate) {
 
     
 // Handles user tapping a date on the calendar input
-$scope.onCalendarChange = function() {
+/*$scope.onCalendarChange = function() {
     if ($scope.pickerDate) {
         var d = new Date($scope.pickerDate);
         var day = String(d.getDate()).padStart(2, '0');
@@ -170,7 +170,49 @@ $scope.onCalendarChange = function() {
         
         $scope.selectDate(formattedDate);
     }
+};*/
+
+    // 1. Fixed Calendar Change Handler (Uses exact YYYY-MM-DD split to avoid timezone offsets)
+$scope.onCalendarChange = function() {
+    if ($scope.pickerDate) {
+        // If pickerDate is a Date object, convert to YYYY-MM-DD string safely
+        var dateStr = "";
+        if ($scope.pickerDate instanceof Date) {
+            var year = $scope.pickerDate.getFullYear();
+            var month = String($scope.pickerDate.getMonth() + 1).padStart(2, '0');
+            var day = String($scope.pickerDate.getDate()).padStart(2, '0');
+            dateStr = year + "-" + month + "-" + day;
+        } else {
+            dateStr = String($scope.pickerDate);
+        }
+
+        var parts = dateStr.split('-'); // ["YYYY", "MM", "DD"]
+        if (parts.length === 3) {
+            var formattedDate = parts[2] + '/' + parts[1] + '/' + parts[0]; // "DD/MM/YYYY"
+            $scope.selectDate(formattedDate);
+        }
+    }
 };
+
+// 2. Fixed Date Selection Logic
+$scope.selectDate = function(targetDate) {
+    $scope.selectedDate = targetDate;
+    
+    // Sync pickerDate without timezone shifts
+    if (targetDate && targetDate.includes('/')) {
+        var parts = targetDate.split('/'); // ["DD", "MM", "YYYY"]
+        if (parts.length === 3) {
+            // Setting year, monthIndex (0-based), day directly avoids UTC offset bugs
+            $scope.pickerDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+        }
+    }
+    
+    // Filter deduplicated entries
+    $scope.filteredDateEntries = $scope.allEntries.filter(function(entry) {
+        return entry['Date'] && entry['Date'].trim() === targetDate.trim();
+    });
+};
+
 
 
     
