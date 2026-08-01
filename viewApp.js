@@ -144,7 +144,7 @@ $scope.selectDate = function(targetDate) {
 };
 
     // Calendar Picker Change Handler
-    $scope.onCalendarChange = function() {
+    /*$scope.onCalendarChange = function() {
         if ($scope.pickerDate) {
             var d = new Date($scope.pickerDate);
             var day = String(d.getDate()).padStart(2, '0');
@@ -154,7 +154,7 @@ $scope.selectDate = function(targetDate) {
 
             $scope.selectDate(formattedDate);
         }
-    };
+    };*/
 
     
 // Handles user tapping a date on the calendar input
