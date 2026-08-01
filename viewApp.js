@@ -269,6 +269,29 @@ $scope.selectDate = function(targetDate) {
 };
 
 
+$scope.applyCalendarDate = function() {
+    if (!$scope.pickerDate) return;
+
+    var year, month, day;
+
+    if ($scope.pickerDate instanceof Date) {
+        year = $scope.pickerDate.getFullYear();
+        month = String($scope.pickerDate.getMonth() + 1).padStart(2, '0');
+        day = String($scope.pickerDate.getDate()).padStart(2, '0');
+    } else {
+        var strParts = String($scope.pickerDate).split('-');
+        if (strParts.length === 3) {
+            year = strParts[0];
+            month = strParts[1];
+            day = strParts[2];
+        }
+    }
+
+    if (year && month && day) {
+        var formattedDate = day + '/' + month + '/' + year;
+        $scope.selectDate(formattedDate);
+    }
+};
 
 
     
