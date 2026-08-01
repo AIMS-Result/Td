@@ -296,36 +296,36 @@ $scope.applyCalendarDate = function() {
 
     // Function triggered when the "OK" button is clicked
 $scope.applyCalendarDate = function() {
-    if (!$scope.pickerDate) {
-        alert("Please select a valid date from the calendar.");
+    // Read raw value directly from the DOM input
+    var dateVal = document.getElementById('adminDatePicker').value; // Returns "YYYY-MM-DD"
+    
+    if (!dateVal) {
+        alert("Please tap on the box and pick a date first!");
         return;
     }
 
-    var year, month, day;
+    // Split YYYY-MM-DD string
+    var parts = dateVal.split('-'); 
+    if (parts.length === 3) {
+        var year = parts[0];
+        var month = parts[1];
+        var day = parts[2];
 
-    // Handle JS Date object created by input[type="date"]
-    if ($scope.pickerDate instanceof Date) {
-        year = $scope.pickerDate.getFullYear();
-        month = String($scope.pickerDate.getMonth() + 1).padStart(2, '0');
-        day = String($scope.pickerDate.getDate()).padStart(2, '0');
-    } else {
-        // Handle standard string format "YYYY-MM-DD"
-        var strParts = String($scope.pickerDate).split('T')[0].split('-');
-        if (strParts.length === 3) {
-            year = strParts[0];
-            month = strParts[1];
-            day = strParts[2];
-        }
-    }
+        // Format to DD/MM/YYYY to match Google Sheets format
+        var formattedDate = day + '/' + month + '/' + year;
 
-    if (year && month && day) {
-        var formattedDate = day + '/' + month + '/' + year; // Convert to DD/MM/YYYY
-        
-        // Update view title and trigger filtering
-        $scope.selectedDate = formattedDate;
-        $scope.filterEntriesByDate(formattedDate);
+        // Force AngularJS to update the view digest cycle
+        $scope.$applyAsync(function() {
+            $scope.selectedDate = formattedDate;
+            
+            // Filter entries by formatted date
+            $scope.filteredDateEntries = $scope.allEntries.filter(function(entry) {
+                return entry['Date'] && entry['Date'].trim() === formattedDate.trim();
+            });
+        });
     }
 };
+
 
 // Main entry filter function
 $scope.filterEntriesByDate = function(targetDate) {
