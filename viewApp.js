@@ -214,7 +214,7 @@ $scope.selectDate = function(targetDate) {
 };*/
 
 
-    // 1. Calendar Change Event Listener
+  /*  // 1. Calendar Change Event Listener
 $scope.onCalendarChange = function() {
     if (!$scope.pickerDate) return;
 
@@ -291,7 +291,67 @@ $scope.applyCalendarDate = function() {
         var formattedDate = day + '/' + month + '/' + year;
         $scope.selectDate(formattedDate);
     }
+};_edited*/
+
+
+    // Function triggered when the "OK" button is clicked
+$scope.applyCalendarDate = function() {
+    if (!$scope.pickerDate) {
+        alert("Please select a valid date from the calendar.");
+        return;
+    }
+
+    var year, month, day;
+
+    // Handle JS Date object created by input[type="date"]
+    if ($scope.pickerDate instanceof Date) {
+        year = $scope.pickerDate.getFullYear();
+        month = String($scope.pickerDate.getMonth() + 1).padStart(2, '0');
+        day = String($scope.pickerDate.getDate()).padStart(2, '0');
+    } else {
+        // Handle standard string format "YYYY-MM-DD"
+        var strParts = String($scope.pickerDate).split('T')[0].split('-');
+        if (strParts.length === 3) {
+            year = strParts[0];
+            month = strParts[1];
+            day = strParts[2];
+        }
+    }
+
+    if (year && month && day) {
+        var formattedDate = day + '/' + month + '/' + year; // Convert to DD/MM/YYYY
+        
+        // Update view title and trigger filtering
+        $scope.selectedDate = formattedDate;
+        $scope.filterEntriesByDate(formattedDate);
+    }
 };
+
+// Main entry filter function
+$scope.filterEntriesByDate = function(targetDate) {
+    $scope.selectedDate = targetDate;
+    
+    // Filter deduplicated records
+    $scope.filteredDateEntries = $scope.allEntries.filter(function(entry) {
+        return entry['Date'] && entry['Date'].trim() === targetDate.trim();
+    });
+};
+
+// Initial date setter on sheet load
+$scope.selectDate = function(targetDate) {
+    $scope.selectedDate = targetDate;
+    
+    // Set default value in the calendar picker
+    if (targetDate && targetDate.includes('/')) {
+        var parts = targetDate.split('/'); // ["DD", "MM", "YYYY"]
+        if (parts.length === 3) {
+            $scope.pickerDate = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+        }
+    }
+    
+    $scope.filterEntriesByDate(targetDate);
+};
+
 
 
     
