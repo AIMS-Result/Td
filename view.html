@@ -163,7 +163,7 @@
                         </div>
                     </div>
                 </div>-->
-                <div class="row text-dark text-start" ng-if="currentView === 'date'">
+                <!--<div class="row text-dark text-start" ng-if="currentView === 'date'">
                     <div class="col-lg-3 col-md-4 mb-4">
                         <div class="sidebar p-3 shadow-sm bg-dark text-white rounded" style="min-height: auto; max-height: 75vh;">
                             <h5 class="fw-bold mb-3 border-bottom border-secondary pb-2 text-center text-md-start">📅 Select Date</h5>
@@ -179,7 +179,7 @@
                                 </ul>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
 
                     <!--<div class="row text-dark text-start" ng-if="currentView === 'date'">
 
@@ -198,8 +198,33 @@
                 </a></div>
                   </div>
                     -->
+                <div class="col-md-5 col-lg-4 mb-3">
+    <div class="card shadow-sm border-0 p-3 bg-dark text-white rounded">
+        <label for="adminDatePicker" class="form-label fw-bold text-warning mb-2">
+            📅 Select Date from Calendar
+        </label>
+        <input type="date" 
+               id="adminDatePicker" 
+               class="form-control form-control-lg text-center fw-bold bg-white text-dark shadow-sm" 
+               ng-model="pickerDate" 
+               ng-change="onCalendarChange()">
+        <small class="text-muted mt-2 d-block text-center">
+            Pick any date to view daily logs
+        </small>
+    </div>
+</div>
 
-                    
+
+
+
+
+
+
+
+
+
+
+                
                     <div class="col-lg-9 col-md-15">
                         <div class="card shadow-sm border-0 p-3 mb-4 bg-white">
                             <h3 class="fw-bold mb-3 text-primary border-bottom pb-2">Daily Record Summary: <span class="text-dark">{{ selectedDate }}</span></h3>
