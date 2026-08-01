@@ -114,7 +114,7 @@ app.controller('ViewController', function($scope, $http) {
     };
 
     // Date Selection Logic
-    $scope.selectDate = function(targetDate) {
+   /* $scope.selectDate = function(targetDate) {
         $scope.selectedDate = targetDate;
         
         var parts = targetDate.split('/');
@@ -125,7 +125,23 @@ app.controller('ViewController', function($scope, $http) {
         $scope.filteredDateEntries = $scope.allEntries.filter(function(entry) {
             return entry['Date'] && entry['Date'].trim() === targetDate.trim();
         });
-    };
+    };*/
+$scope.selectDate = function(targetDate) {
+    $scope.selectedDate = targetDate;
+    
+    // Parse DD/MM/YYYY back into Date object for input[type="date"]
+    if (targetDate && targetDate.includes('/')) {
+        var parts = targetDate.split('/');
+        if (parts.length === 3) {
+            $scope.pickerDate = new Date(parts[2], parts[1] - 1, parts[0]);
+        }
+    }
+    
+    // Filter deduplicated entries for selected date
+    $scope.filteredDateEntries = $scope.allEntries.filter(function(entry) {
+        return entry['Date'] && entry['Date'].trim() === targetDate.trim();
+    });
+};
 
     // Calendar Picker Change Handler
     $scope.onCalendarChange = function() {
@@ -140,6 +156,24 @@ app.controller('ViewController', function($scope, $http) {
         }
     };
 
+    
+// Handles user tapping a date on the calendar input
+$scope.onCalendarChange = function() {
+    if ($scope.pickerDate) {
+        var d = new Date($scope.pickerDate);
+        var day = String(d.getDate()).padStart(2, '0');
+        var month = String(d.getMonth() + 1).padStart(2, '0');
+        var year = d.getFullYear();
+        
+        // Format to match Google Sheet date string (DD/MM/YYYY)
+        var formattedDate = day + '/' + month + '/' + year;
+        
+        $scope.selectDate(formattedDate);
+    }
+};
+
+
+    
     // Teacher History Search Logic
     $scope.processTeacherQuery = function() {
         var query = $scope.searchTarget.teacherName ? $scope.searchTarget.teacherName.trim() : '';
