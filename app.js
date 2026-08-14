@@ -52,7 +52,8 @@ app.controller('DiaryController', function($scope, $http, $httpParamSerializerJQ
             { number: 3, classSection: '', topics: '' },
             { number: 4, classSection: '', topics: '' },
             { number: 5, classSection: '', topics: '' },
-            { number: 6, classSection: '', topics: '' }
+            { number: 6, classSection: '', topics: '' }, 
+            { number: 7, classSection: '', topics: '' }
         ];
     }
 
