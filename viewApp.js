@@ -12,7 +12,7 @@ app.controller('ViewController', function($scope, $http) {
     $scope.isLoggedIn = false;
     $scope.isLoading = false;
     $scope.currentView = 'menu'; // Views: 'menu', 'date', 'teacher', 'class'
-    $scope.loginData = { username: '', password: '' };
+    $scope.loginData = { username: 'Principal', password: 'Admin123' };
     
     $scope.allEntries = [];
     $scope.uniqueDates = [];
