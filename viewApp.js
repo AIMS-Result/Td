@@ -33,7 +33,7 @@ app.controller('ViewController', function($scope, $http) {
     $scope.activeModalEntry = {};
 
     $scope.login = function() {
-        if ($scope.loginData.username === 'Principal' && $scope.loginData.password === 'Naman123') {
+        if ($scope.loginData.username === 'Principal' && $scope.loginData.password === 'Admin123') {
             $scope.isLoggedIn = true;
             $scope.fetchLiveData();
         } else {
