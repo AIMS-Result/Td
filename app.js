@@ -143,7 +143,7 @@ $scope.submitDiary = function() {
     var today = new Date();
     today.setHours(0,0,0,0);
     //2. get selected entry date normalised to midnight
-    vae entryDateObj = new Date($scope.diaryEntry.date);
+    var entryDateObj = new Date($scope.diaryEntry.date);
     entryDateObj.setHours(0,0,0,0);
     //3. strict check
     if (entryDateObj < today){
