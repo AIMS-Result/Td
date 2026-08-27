@@ -5,7 +5,7 @@ app.controller('SummaryController', function($scope, $http) {
     // =========================================================
     // CONFIGURATION LINKS
     // =========================================================
-    var diaryCsvUrl = 'YOUR_PRIMARY_DIARY_RESPONSES_SHEET_CSV_URL';
+    var diaryCsvUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSf7RKtiK4aD2NnEgocCJ4pngXV4KuxXWoRD_CwJ3JoyW8h_MA/formResponse';
     var registryCsvUrl = 'YOUR_NEW_STANDALONE_REGISTRY_CSV_LINK_HERE';
     // =========================================================
 
