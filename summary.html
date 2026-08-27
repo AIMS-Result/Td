@@ -20,34 +20,13 @@
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h1">🏫 Principal Supervisory Dashboard</span>
             <div>
-                <a href="view.html" class="btn btn-outline-light btn-sm me-2">Analytics View</a>
-                <button class="btn btn-danger btn-sm" ng-click="logout()" ng-if="isLoggedIn">Log Out</button>
+                <a href="view.html" class="btn btn-outline-light btn-sm">← Back to Admin Portal</a>
             </div>
         </div>
     </nav>
 
-    <!-- Admin Login Screen -->
-    <div class="container my-5" ng-if="!isLoggedIn">
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-                <div class="card shadow border-0">
-                    <div class="card-body p-4 text-center">
-                        <h4 class="card-title mb-3">Supervisory Gate Access</h4>
-                        <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Username" ng-model="loginData.username">
-                        </div>
-                        <div class="mb-3">
-                            <input type="password" class="form-control" placeholder="Master Password / PIN" ng-model="loginData.password">
-                        </div>
-                        <button class="btn btn-dark w-100 fw-bold" ng-click="login()">Access Summary Portal</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Main Dashboard -->
-    <div class="container my-4" ng-if="isLoggedIn">
+    <div class="container my-4">
         
         <!-- Loading Spinner -->
         <div class="text-center my-4" ng-if="isLoading">
