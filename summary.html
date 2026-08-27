@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html ng-app="summaryDiaryApp" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervisory Attendance Summary</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- AngularJS & PapaParse -->
+    <script src="angular.min.js"></script>
+    <script src="papaparse.min.js"></script>
+    <script src="summaryApp.js"></script>
+</head>
+<body ng-controller="SummaryController" class="bg-light">
+
+    <!-- Top Navigation -->
+    <nav class="navbar navbar-dark bg-dark shadow-sm">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">🏫 Principal Supervisory Dashboard</span>
+            <div>
+                <a href="view.html" class="btn btn-outline-light btn-sm me-2">Analytics View</a>
+                <button class="btn btn-danger btn-sm" ng-click="logout()" ng-if="isLoggedIn">Log Out</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Login Screen -->
+    <div class="container my-5" ng-if="!isLoggedIn">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="card shadow border-0">
+                    <div class="card-body p-4 text-center">
+                        <h4 class="card-title mb-3">Supervisory Gate Access</h4>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" placeholder="Username" ng-model="loginData.username">
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" class="form-control" placeholder="Master Password / PIN" ng-model="loginData.password">
+                        </div>
+                        <button class="btn btn-dark w-100 fw-bold" ng-click="login()">Access Summary Portal</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="container my-4" ng-if="isLoggedIn">
+        
+        <!-- Loading Spinner -->
+        <div class="text-center my-4" ng-if="isLoading">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2 text-muted fw-bold">Synchronizing registry and live diary database...</p>
+        </div>
+
+        <div ng-if="!isLoading">
+            
+            <!-- Header Controls & Date Picker -->
+            <div class="row mb-4 align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <h3 class="fw-bold text-dark m-0">Daily Submission Supervision</h3>
+                    <small class="text-muted">Comparing active staff registry against live submissions</small>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card bg-dark text-white border-0 shadow-sm p-3">
+                        <div class="d-flex align-items-center justify-content-between gap-2">
+                            <label for="summaryDatePicker" class="fw-bold me-2 text-warning mb-0 text-nowrap">📅 Target Date:</label>
+                            <input type="date" 
+                                   id="summaryDatePicker" 
+                                   class="form-control text-center fw-bold bg-white text-dark" 
+                                   ng-model="pickerDate">
+                            <button class="btn btn-warning fw-bold px-3 text-nowrap" ng-click="applyDateChange()">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Quick Metric Cards -->
+            <div class="row text-center mb-4">
+                <div class="col-md-4 mb-2">
+                    <div class="card border-0 shadow-sm bg-white p-3 border-start border-4 border-primary">
+                        <small class="text-muted text-uppercase fw-bold">Total Staff Count</small>
+                        <h2 class="fw-bold mb-0 text-primary">{{ teacherStatusList.length }}</h2>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <div class="card border-0 shadow-sm bg-white p-3 border-start border-4 border-success">
+                        <small class="text-muted text-uppercase fw-bold">Submitted Diaries</small>
+                        <h2 class="fw-bold mb-0 text-success">{{ submittedCount }}</h2>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-2">
+                    <div class="card border-0 shadow-sm bg-white p-3 border-start border-4 border-danger">
+                        <small class="text-muted text-uppercase fw-bold">Pending / Missing</small>
+                        <h2 class="fw-bold mb-0 text-danger">{{ pendingCount }}</h2>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Staff Status Summary List -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center p-3">
+                    <h5 class="m-0 fw-bold">Staff Compliance List for: <span class="text-warning">{{ selectedDate }}</span></h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Teacher Name</th>
+                                    <th>Status Flag</th>
+                                    <th>Subject</th>
+                                    <th>Attendance Status</th>
+                                    <th>Remarks / Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in teacherStatusList" 
+                                    ng-class="{'table-success': item.hasSubmitted, 'table-danger': !item.hasSubmitted}">
+                                    
+                                    <td class="fw-bold">{{ $index + 1 }}</td>
+                                    
+                                    <td class="fw-bold">{{ item.name }}</td>
+                                    
+                                    <td>
+                                        <span class="badge rounded-pill fs-6 px-3 py-2" 
+                                              ng-class="item.hasSubmitted ? 'bg-success' : 'bg-danger'">
+                                            {{ item.hasSubmitted ? 'Submitted' : 'Not Submitted' }}
+                                        </span>
+                                    </td>
+                                    
+                                    <td>{{ item.entry ? item.entry['Subject'] : '-' }}</td>
+                                    
+                                    <td>
+                                        <span class="badge" ng-if="item.hasSubmitted"
+                                              ng-class="{'bg-success': item.entry['Status'] === 'Present', 'bg-warning text-dark': item.entry['Status'] === 'Half Day', 'bg-danger': item.entry['Status'] === 'Absent', 'bg-info text-dark': item.entry['Status'] === 'Sick Leave'}">
+                                            {{ item.entry['Status'] }}
+                                        </span>
+                                        <span ng-if="!item.hasSubmitted" class="text-muted">-</span>
+                                    </td>
+                                    
+                                    <td class="small">{{ item.entry ? item.entry['Remarks'] || 'No remark added' : 'Awaiting daily submission' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
