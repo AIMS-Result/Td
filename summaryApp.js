@@ -1,0 +1,123 @@
+var app = angular.module('summaryDiaryApp', []);
+
+app.controller('SummaryController', function($scope, $http) {
+    
+    // =========================================================
+    // CONFIGURATION LINKS
+    // =========================================================
+    var diaryCsvUrl = 'YOUR_PRIMARY_DIARY_RESPONSES_SHEET_CSV_URL';
+    var registryCsvUrl = 'YOUR_NEW_STANDALONE_REGISTRY_CSV_LINK_HERE';
+    // =========================================================
+
+    $scope.isLoading = true;
+    $scope.registryTeachers = [];
+    $scope.rawDiaryEntries = [];
+    $scope.teacherStatusList = [];
+
+    $scope.submittedCount = 0;
+    $scope.pendingCount = 0;
+
+    // Set Default Target Date to Today
+    var today = new Date();
+    $scope.pickerDate = today;
+    
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var yyyy = today.getFullYear();
+    $scope.selectedDate = dd + '/' + mm + '/' + yyyy;
+
+    // Automatically load data on page open
+    $scope.loadAllData = function() {
+        $scope.isLoading = true;
+
+        // Fetch Registry CSV
+        $http.get(registryCsvUrl).then(function(regRes) {
+            var parsedRegistry = Papa.parse(regRes.data, { header: true, skipEmptyLines: true });
+            
+            // Extract registered teacher names from Registry Sheet
+            $scope.registryTeachers = parsedRegistry.data
+                .map(row => row['Teacher Name'] || row['Name'] || row[Object.keys(row)[0]])
+                .filter(Boolean);
+
+            // Fetch Diary Entries CSV
+            return $http.get(diaryCsvUrl);
+        }).then(function(diaryRes) {
+            var parsedDiary = Papa.parse(diaryRes.data, { header: true, skipEmptyLines: true });
+            var rawData = parsedDiary.data;
+
+            // Normalize Diary Columns
+            rawData.forEach(function(row) {
+                row['Teacher Name'] = row['Teacher Name'] || row['entry.111111111'];
+                row['Subject'] = row['Subject'] || row['entry.222222222'];
+                row['Date'] = row['Date'] || row['entry.333333333'];
+                row['Status'] = row['Status'] || row['entry.444444444'];
+                row['Remarks'] = row['Remarks'] || row['entry.777777777'];
+            });
+
+            // Deduplicate: Keep latest entry per teacher per date
+            var map = {};
+            rawData.forEach(function(row) {
+                var t = row['Teacher Name'] ? row['Teacher Name'].trim() : '';
+                var d = row['Date'] ? row['Date'].trim() : '';
+                if (t && d) {
+                    map[t + '___' + d] = row;
+                }
+            });
+            $scope.rawDiaryEntries = Object.values(map);
+
+            // Evaluate comparison for default selected date (Today)
+            $scope.evaluateStatusForDate($scope.selectedDate);
+
+            $scope.isLoading = false;
+        }).catch(function(err) {
+            alert("Error loading databases. Check your CSV URL configurations.");
+            $scope.isLoading = false;
+        });
+    };
+
+    // Date Picker Change Handler via DOM / OK button
+    $scope.applyDateChange = function() {
+        var dateVal = document.getElementById('summaryDatePicker').value; // Returns YYYY-MM-DD
+        if (!dateVal) {
+            alert("Please pick a valid date!");
+            return;
+        }
+
+        var parts = dateVal.split('-'); // ["YYYY", "MM", "DD"]
+        if (parts.length === 3) {
+            var formattedDate = parts[2] + '/' + parts[1] + '/' + parts[0]; // Convert to DD/MM/YYYY
+            $scope.selectedDate = formattedDate;
+            $scope.evaluateStatusForDate(formattedDate);
+        }
+    };
+
+    // Match Registry against Diary Submissions for target date
+    $scope.evaluateStatusForDate = function(targetDate) {
+        // Filter diary records matching the target date
+        var targetDateEntries = $scope.rawDiaryEntries.filter(function(entry) {
+            return entry['Date'] && entry['Date'].trim() === targetDate.trim();
+        });
+
+        $scope.submittedCount = 0;
+        $scope.pendingCount = 0;
+
+        // Map through all registered teachers
+        $scope.teacherStatusList = $scope.registryTeachers.map(function(teacherName) {
+            var match = targetDateEntries.find(function(entry) {
+                return entry['Teacher Name'] && entry['Teacher Name'].trim() === teacherName.trim();
+            });
+
+            if (match) {
+                $scope.submittedCount++;
+                return { name: teacherName, hasSubmitted: true, entry: match };
+            } else {
+                $scope.pendingCount++;
+                return { name: teacherName, hasSubmitted: false, entry: null };
+            }
+        });
+    };
+
+    // Trigger auto-fetch on load
+    $scope.loadAllData();
+
+});
