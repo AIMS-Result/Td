@@ -117,7 +117,8 @@ app.controller('DiaryController', function($scope, $http, $httpParamSerializerJQ
 
     // NEW UPDATED CODE:
 $scope.submitDiary = function() {
-    // 1. Get today's actual date
+   /* update for restricted submission upto that day
+   // 1. Get today's actual date
     var today = new Date();
     var todayStr = today.toISOString().split('T')[0];
     
@@ -136,7 +137,26 @@ $scope.submitDiary = function() {
         var lateTag = "[Late Entry - Submitted on: " + formattedToday + "]";
         finalRemarks = finalRemarks ? lateTag + " " + finalRemarks : lateTag;
     }
+*/
 
+    //1. get todays date normalised to midnight
+    var today = new Date();
+    today.setHours(0,0,0,0);
+    //2. get selected entry date normalised to midnight
+    vae entryDateObj = new Date($scope.diaryEntry.date);
+    entryDateObj.setHours(0,0,0,0);
+    //3. strict check
+    if (entryDateObj < today){
+        alert("past date submission not allowed");
+        return;
+    }
+    // formate entry date string for google form mapping
+    var entryDateStr = entryDateObj.toISOString().split('T')[0];
+    var finalRemarks = $scope.diaryEntry.remarks || '';
+
+
+
+    
     // 4. Map form fields (Using updated finalRemarks)
     var postData = {
         'entry.1416561559': $scope.diaryEntry.teacherName, 
