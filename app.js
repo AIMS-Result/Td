@@ -138,7 +138,7 @@ $scope.submitDiary = function() {
         finalRemarks = finalRemarks ? lateTag + " " + finalRemarks : lateTag;
     }
 */
-
+/* change on 02/09/26 cause of not submission on even current date
     //1. get todays date normalised to midnight
     var today = new Date();
     today.setHours(0,0,0,0);
@@ -155,7 +155,44 @@ $scope.submitDiary = function() {
     var finalRemarks = $scope.diaryEntry.remarks || '';
 
 
+*/
 
+    // 1. Get Today's Date in local YYYY-MM-DD format
+    var now = new Date();
+    var todayStr = now.getFullYear() + '-' + 
+                   String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                   String(now.getDate()).padStart(2, '0');
+
+    // 2. Get Selected Entry Date in YYYY-MM-DD format
+    var entryDateStr = '';
+    if ($scope.diaryEntry.date instanceof Date) {
+        var d = $scope.diaryEntry.date;
+        entryDateStr = d.getFullYear() + '-' + 
+                       String(d.getMonth() + 1).padStart(2, '0') + '-' + 
+                       String(d.getDate()).padStart(2, '0');
+    } else if (typeof $scope.diaryEntry.date === 'string') {
+        entryDateStr = $scope.diaryEntry.date.split('T')[0];
+    }
+
+    if (!entryDateStr) {
+        alert("Please select a valid date.");
+        return;
+    }
+
+    // 3. STRICT CHECK: Block submission ONLY if entry date is strictly earlier than today
+    if (entryDateStr < todayStr) {
+        alert("⚠️ Late Submissions Disabled!\nYou cannot submit or update diary records for past dates. Please contact the administrator.");
+        return; // Halts submission
+    }
+
+    // Convert YYYY-MM-DD to DD/MM/YYYY for Google Forms/Sheets formatting if required
+    var parts = entryDateStr.split('-');
+    var formattedDisplayDate = parts[2] + '/' + parts[1] + '/' + parts[0];
+
+    var finalRemarks = $scope.diaryEntry.remarks || '';
+
+
+    
     
     // 4. Map form fields (Using updated finalRemarks)
     var postData = {
