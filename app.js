@@ -144,7 +144,7 @@ $scope.submitDiary = function() {
     //today.setHours(0,0,0,0);
     //2. get selected entry date normalised to midnight
     var entryDateObj = new Date($scope.diaryEntry.date);
-    entryDateObj.setHours(0,0,0,0);
+    //entryDateObj.setHours(0,0,0,0);
     //3. strict check
     if (entryDateObj < today){
         alert("past date submission not allowed");
