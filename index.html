@@ -69,7 +69,7 @@
                             </div>
                             <hr>
 
-                            <div ng-if="diaryEntry.status !== 'Absent' && diaryEntry.status !== 'Sick Leave'">
+                            <div ng-if="diaryEntry.status !== 'Absent' && diaryEntry.status !== 'On Leave'">
                                 <h5 class="mb-3 text-secondary">Today's Lectures</h5>
                                 <div class="card border-primary-subtle mb-3 bg-white shadow-sm" ng-repeat="lecture in diaryEntry.lectures">
                                     <div class="card-body">
