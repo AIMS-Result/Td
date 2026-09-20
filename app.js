@@ -229,6 +229,11 @@ $scope.submitDiary = function() {
         $scope.diaryEntry.lectures = getDefaultLectures();
         $scope.diaryEntry.remarks = '';
     };
+    $scope.onStatusChange = function() {
+        if ($scope.diaryEntry.status === 'On Leave' || $scope.diaryEntry.status === 'Sick Leave') {
+            $scope.diaryEntry.lectures = getDefaultLectures();
+        }
+    };
 
     // Run verification immediately
     $scope.initPortal();
