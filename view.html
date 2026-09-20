@@ -265,12 +265,12 @@
                                             <td class="fw-bold text-dark">{{ entry['Teacher Name'] }}</td>
                                             <td><span class="badge bg-secondary px-2 py-1">{{ entry['Subject'] }}</span></td>
                                             <td>
-                                                <span class="badge px-2 py-1" ng-class="{'bg-success': entry['Status'] === 'Present', 'bg-danger': entry['Status'] === 'Absent', 'bg-warning text-dark': entry['Status'] === 'Half Day', 'bg-info text-dark': entry['Status'] === 'Sick Leave'}">
+                                                <span class="badge px-2 py-1" ng-class="{'bg-success': entry['Status'] === 'Present', 'bg-danger': entry['Status'] === 'Absent', 'bg-warning text-dark': entry['Status'] === 'Half Day', 'bg-info text-dark': entry['Status'] === 'Sick Leave', 'bg-danger': entry['Status'] === 'On Leave'}">
                                                     {{ entry['Status'] }}
                                                 </span>
                                             </td>
                                             <td>
-                                                <button class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 fw-bold" data-bs-toggle="modal" data-bs-target="#lectureModal" ng-click="setActiveModalEntry(entry)" ng-disabled="entry['Status'] === 'Absent' || entry['Status'] === 'Sick Leave'">
+                                                <button class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1 fw-bold" data-bs-toggle="modal" data-bs-target="#lectureModal" ng-click="setActiveModalEntry(entry)" ng-disabled="entry['Status'] === 'Absent' || entry['Status'] === 'Sick Leave' || entry['Status'] === 'On Leave'">
                                                     🔍 View Lectures
                                                 </button>
                                             </td>
@@ -319,9 +319,9 @@
                                 <tr ng-repeat="entry in teacherTimelineResults">
                                     <td>{{ entry['Date'] }}</td>
                                     <td><span class="badge bg-secondary">{{ entry['Subject'] }}</span></td>
-                                    <td><span class="badge" ng-class="{'bg-success': entry['Status'] === 'Present', 'bg-danger': entry['Status'] === 'Absent', 'bg-warning text-dark': entry['Status'] === 'Half Day', 'bg-info text-dark': entry['Status'] === 'Sick Leave'}">{{ entry['Status'] }}</span></td>
+                                    <td><span class="badge" ng-class="{'bg-success': entry['Status'] === 'Present', 'bg-danger': entry['Status'] === 'Absent', 'bg-warning text-dark': entry['Status'] === 'Half Day', 'bg-info text-dark': entry['Status'] === 'Sick Leave', 'bg-danger': entry['Status'] === 'On Leave'}">{{ entry['Status'] }}</span></td>
                                     <td>
-                                        <button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#lectureModal" ng-click="setActiveModalEntry(entry)" ng-disabled="entry['Status'] === 'Absent' || entry['Status'] === 'Sick Leave'">🔍 Open View</button>
+                                        <button class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#lectureModal" ng-click="setActiveModalEntry(entry)" ng-disabled="entry['Status'] === 'Absent' || entry['Status'] === 'Sick Leave' || entry['Status'] === 'On Leave'">🔍 Open View</button>
                                     </td>
                                     <td class="fw-bold text-dark">{{ entry['Remarks'] }}</td>
                                 </tr>
