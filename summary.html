@@ -116,7 +116,7 @@
                                     
                                     <td>
                                         <span class="badge" ng-if="item.hasSubmitted"
-                                              ng-class="{'bg-success': item.entry['Status'] === 'Present', 'bg-warning text-dark': item.entry['Status'] === 'Half Day', 'bg-danger': item.entry['Status'] === 'Absent', 'bg-info text-dark': item.entry['Status'] === 'Sick Leave'}">
+                                              ng-class="{'bg-success': item.entry['Status'] === 'Present', 'bg-warning text-dark': item.entry['Status'] === 'Half Day', 'bg-danger': item.entry['Status'] === 'Absent', 'bg-info text-dark': item.entry['Status'] === 'Sick Leave', 'bg-danger': item.entry['Status'] === 'On Leave'}">
                                             {{ item.entry['Status'] }}
                                         </span>
                                         <span ng-if="!item.hasSubmitted" class="text-muted">-</span>
