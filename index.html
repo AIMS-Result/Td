@@ -76,11 +76,11 @@
                                         <span class="badge bg-primary mb-3">Lecture {{lecture.number}}</span>
                                         <div class="mb-3">
                                             <label class="form-label small fw-bold">Class / Section</label>
-                                            <input type="text" class="form-control" placeholder="e.g., Grade 10-A" ng-model="lecture.classSection" required>
+                                            <input type="text" class="form-control" placeholder="e.g., Grade 10-A" ng-model="lecture.classSection" ng-required="diaryEntry.status === 'Present' || diaryEntry.status === 'Half Day'">
                                         </div>
                                         <div class="mb-2">
                                             <label class="form-label small fw-bold">Topics Covered</label>
-                                            <textarea class="form-control" rows="2" placeholder="What did you teach?" ng-model="lecture.topics" required></textarea>
+                                            <textarea class="form-control" rows="2" placeholder="What did you teach?" ng-model="lecture.topics" ng-required="diaryEntry.status === 'Present' || diaryEntry.status === 'Half Day'"></textarea>
                                         </div>
                                     </div>
                                 </div>
