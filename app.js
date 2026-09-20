@@ -65,6 +65,20 @@ app.controller('DiaryController', function($scope, $http, $httpParamSerializerJQ
         lectures: getDefaultLectures(),
         remarks: ''
     };
+    
+
+    // FIX: Clear or re-initialize lecture arrays dynamically when status changes
+    $scope.onStatusChange = function() {
+        if ($scope.diaryEntry.status === 'On Leave' || $scope.diaryEntry.status === 'Sick Leave') {
+            // When On Leave, wipe the lectures array so AngularJS has no fields to validate
+            $scope.diaryEntry.lectures = [];
+        } else if ($scope.diaryEntry.status === 'Present' || $scope.diaryEntry.status === 'Half Day') {
+            if (!$scope.diaryEntry.lectures || $scope.diaryEntry.lectures.length === 0) {
+                $scope.diaryEntry.lectures = getDefaultLectures();
+            }
+        }
+    };
+
 
     $scope.login = function() {
         var inputName = $scope.loginData.teacherName.trim();
@@ -229,11 +243,11 @@ $scope.submitDiary = function() {
         $scope.diaryEntry.lectures = getDefaultLectures();
         $scope.diaryEntry.remarks = '';
     };
-    $scope.onStatusChange = function() {
+   /* $scope.onStatusChange = function() {
         if ($scope.diaryEntry.status === 'On Leave' || $scope.diaryEntry.status === 'Sick Leave') {
             $scope.diaryEntry.lectures = getDefaultLectures();
         }
-    };
+    };*/
 
     // Run verification immediately
     $scope.initPortal();
