@@ -208,6 +208,7 @@ $scope.submitDiary = function() {
 
     
     
+    /* 21/09/26 for on leave
     // 4. Map form fields (Using updated finalRemarks)
     var postData = {
         'entry.1416561559': $scope.diaryEntry.teacherName, 
@@ -217,7 +218,32 @@ $scope.submitDiary = function() {
         'entry.1058626871': ($scope.diaryEntry.status === 'Present' || $scope.diaryEntry.status === 'Half Day') ? $scope.diaryEntry.lectures.map((l,i)=>"L"+(i+1)+": "+(l.classSection||'Free/Blank')).join('\n') : 'N/A',
         'entry.1740253895': ($scope.diaryEntry.status === 'Present' || $scope.diaryEntry.status === 'Half Day') ? $scope.diaryEntry.lectures.map((l,i)=>"L"+(i+1)+": "+(l.topics||'Free/Blank')).join('\n') : 'N/A',
         'entry.699280446': finalRemarks
+    }; */
+
+        // 4. Map form fields
+    var isTeaching = ($scope.diaryEntry.status === 'Present' || $scope.diaryEntry.status === 'Half Day');
+
+    var classData = isTeaching 
+        ? $scope.diaryEntry.lectures.map(function(l, i) { return "L" + (i + 1) + ": " + (l.classSection || 'Free/Blank'); }).join('\n')
+        : "ON LEAVE - NO LECTURES";
+
+    var topicData = isTeaching 
+        ? $scope.diaryEntry.lectures.map(function(l, i) { return "L" + (i + 1) + ": " + (l.topics || 'Free/Blank'); }).join('\n')
+        : "ON LEAVE - NO TOPICS";
+
+    var postData = {
+        'entry.1416561559': $scope.diaryEntry.teacherName, 
+        'entry.389868599': $scope.diaryEntry.subject,      
+        'entry.1404280910': entryDateStr,
+        'entry.1247247380': $scope.diaryEntry.status,
+        'entry.1058626871': classData,
+        'entry.1740253895': topicData,
+        'entry.699280446': finalRemarks
     };
+
+
+
+    
 
     // 5. Submit to Google Forms
     $http({
