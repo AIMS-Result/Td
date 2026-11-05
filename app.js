@@ -192,12 +192,12 @@ $scope.submitDiary = function() {
         alert("Please select a valid date.");
         return;
     }
-
+// Past date lock & unlock
     // 3. STRICT CHECK: Block submission ONLY if entry date is strictly earlier than today
-    if (entryDateStr < todayStr) {
-        alert("⚠️ Late Submissions Disabled!\nYou cannot submit or update diary records for past dates. Please contact the administrator.");
-        return; // Halts submission
-    }
+    //if (entryDateStr < todayStr) {
+    //    alert("⚠️ Late Submissions Disabled!\nYou cannot submit or update diary records for past dates. Please contact the administrator.");
+  //      return; // Halts submission
+ //   }
 
     // Convert YYYY-MM-DD to DD/MM/YYYY for Google Forms/Sheets formatting if required
     var parts = entryDateStr.split('-');
